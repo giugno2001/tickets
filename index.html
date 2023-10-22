@@ -319,8 +319,7 @@
         <div class="title">Hola <span id="name_user"></span>, si necesitas crear un ticket solo debes indicar la
             solicitud y dar click
             al botón de crear ticket</div>
-        <textarea type="text" placeholder="Ingresa aquí la descripción del requerimiento..." id="text_field"
-            rows="16"></textarea>
+        <textarea id="text_field" type="text" placeholder="Ingresa aquí la descripción del requerimiento..." rows="16"></textarea>
         <button id="data_btn" onclick="DemoApp.sendMessage('', true);">Crear ticket</button>
     </section>
     <section class="mt-2">
@@ -331,7 +330,7 @@
             Version: <span id="ver"></span>
         </div>
         <!-- Linea para ver los datos que recibo del telegram solo para desarrollo -->
-        <!-- <pre><code id="webview_data"></code></pre> -->
+        <pre><code id="webview_data"></code></pre>
          <!-- /fin -->
     </section>
 
@@ -405,11 +404,11 @@
                 // return onCallback && onCallback({ error: 'This function (' + method + ') should send requests to your backend. Please, change this code to your own.' });
 
                 fetch('https://messor-app-susp3.ondigitalocean.app/api/crear-ticket', {
-                    mode: 'cors',
+                    // mode: 'cors',
                     method: 'POST',
                     body: JSON.stringify(Object.assign(data, {
-
-                        
+                        telegramID: DemoApp.initDataUnsafe.user,
+                        description: document.getElementById('text_field').val(),
                     })),
                     headers: {
                         'Content-Type': 'application/json'
@@ -436,7 +435,7 @@
         document.getElementById('text_field').focus();
 
         document.getElementById('ver').innerHTML = Telegram.WebApp.version;
-        // document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
+        document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
 
         if (DemoApp.initDataUnsafe.user) {
             document.getElementById('name_user').innerHTML = DemoApp.initDataUnsafe.user.first_name;
