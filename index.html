@@ -398,6 +398,7 @@
 
             // Other
             apiRequest(data, onCallback) {
+                
                 // DISABLE BACKEND FOR FRONTEND DEMO
                 // YOU CAN USE YOUR OWN REQUESTS TO YOUR OWN BACKEND
                 // CHANGE THIS CODE TO YOUR OWN
@@ -408,7 +409,7 @@
                     method: 'POST',
                     body: JSON.stringify(Object.assign(data, {
                         telegramID: DemoApp.initDataUnsafe.user.id,
-                        description: document.getElementById('text_field').val(),
+                        description: document.getElementById('text_field').value,
                     })),
                     headers: {
                         'Content-Type': 'application/json'
