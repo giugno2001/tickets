@@ -330,7 +330,7 @@
             Version: <span id="ver"></span>
         </div>
         <!-- Linea para ver los datos que recibo del telegram solo para desarrollo -->
-        <pre><code id="webview_data"></code></pre>
+        <!-- <pre><code id="webview_data"></code></pre> -->
          <!-- /fin -->
     </section>
 
@@ -364,7 +364,7 @@
             sendMessage(msg_id, with_webview) {
 
                 if (!DemoApp.initDataUnsafe.query_id) {
-                    alert('WebViewQueryId not defined');
+                    DemoApp.showAlert('WebViewQueryId not defined');
                     return;
                 }
 
@@ -407,7 +407,7 @@
                     // mode: 'cors',
                     method: 'POST',
                     body: JSON.stringify(Object.assign(data, {
-                        telegramID: DemoApp.initDataUnsafe.user,
+                        telegramID: DemoApp.initDataUnsafe.user.id,
                         description: document.getElementById('text_field').val(),
                     })),
                     headers: {
@@ -435,7 +435,7 @@
         document.getElementById('text_field').focus();
 
         document.getElementById('ver').innerHTML = Telegram.WebApp.version;
-        document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
+        // document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
 
         if (DemoApp.initDataUnsafe.user) {
             document.getElementById('name_user').innerHTML = DemoApp.initDataUnsafe.user.first_name;
