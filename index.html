@@ -381,7 +381,7 @@
                     loader.classList.add("loader--hidden");
                     document.querySelectorAll('button').forEach((btn) => btn.disabled = false);
                     if (result) {
-                        DemoApp.showAlert(result.ticket);
+                        DemoApp.showAlert(DemoApp.initDataUnsafe.user.first_name + ', tu número de ticket generado en automático es el: ' + result.ticket + ' con el que puedes hacer seguimiento de tu requerimiento, Gracias.' );
                     } else {
                         DemoApp.showAlert('Error grave, no ha sido posible comunicarse con el servidor');
                     }
