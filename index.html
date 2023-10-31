@@ -41,6 +41,9 @@
         .mt-2 {
             margin-top: 10px;
         }
+        .mb-2 {
+            margin-bottom: 10px;
+        }
 
         .btn-primary {
             background-color: var(--tg-theme-button-color, #50a8eb);
@@ -319,6 +322,10 @@
         <div class="title">Hola <span id="name_user"></span>, si necesitas crear un ticket solo debes indicar la
             solicitud y dar click
             al botón de crear ticket</div>
+        <div class="mt-2 mb-2">
+            <input type="checkbox" id="priority" name="priority">
+            <label for="priority"> URGENTE</label>
+        </div>
         <textarea id="text_field" type="text" placeholder="Ingresa aquí la descripción del requerimiento..." rows="16"></textarea>
         <button id="data_btn" onclick="DemoApp.sendMessage('', true);">Crear ticket</button>
     </section>
@@ -363,10 +370,10 @@
             // Actions
             sendMessage(msg_id, with_webview) {
 
-                if (!DemoApp.initDataUnsafe.query_id) {
-                    DemoApp.showAlert('WebViewQueryId not defined');
-                    return;
-                }
+                // if (!DemoApp.initDataUnsafe.query_id) {
+                //     DemoApp.showAlert('WebViewQueryId not defined');
+                //     return;
+                // }
 
                 document.querySelectorAll('button').forEach((btn) => btn.disabled = true);
 
@@ -411,6 +418,7 @@
                         telegramID: DemoApp.initDataUnsafe.user.id,
                         poc: DemoApp.initDataUnsafe.user.first_name,
                         description: document.getElementById('text_field').value,
+                        priority: document.getElementById('priority').checked,
                     })),
                     headers: {
                         'Content-Type': 'application/json'
