@@ -394,6 +394,7 @@
                     document.querySelectorAll('button').forEach((btn) => btn.disabled = false);
                     if (result) {
                         // Cerramos el formulario
+                        document.getElementById('text_field').value = '';
                         DemoApp.close;
                         DemoApp.showAlert(DemoApp.initDataUnsafe.user.first_name + ', tu número de ticket generado en automático es el: ' + result.ticket + ' con el que puedes hacer seguimiento de tu requerimiento, Gracias.' );
                     } else {
