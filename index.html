@@ -308,6 +308,26 @@
             animation: loading 0.75s ease infinite;
         }
 
+        .input_container {
+            border: 1px solid #e5e5e5;
+        }
+
+        input[type=file]::file-selector-button {
+            background-color: #fff;
+            color: #000;
+            border: 0px;
+            border-right: 1px solid #e5e5e5;
+            padding: 10px 15px;
+            margin-right: 20px;
+            transition: .5s;
+        }
+
+        input[type=file]::file-selector-button:hover {
+            background-color: #eee;
+            border: 0px;
+            border-right: 1px solid #e5e5e5;
+        }
+
         @keyframes loading {
             from {
                 transform: rotate(0turn);
@@ -326,11 +346,15 @@
         <div class="title">Hola <span id="name_user"></span>, si necesitas crear un ticket solo debes indicar la
             solicitud y dar clic
             al botón de crear ticket</div>
+        <div class="subtitle">Nota: Si necesitas envíar uno o varios archivos (.doc .xls .pdf o imágenes), dale clic al botón elegir archivos</div>
         <div class="mt-2 mb-2" style="text-align:left">
             <input type="checkbox" id="priority" name="priority">
             <label for="priority">URGENTE</label>
         </div>
         <textarea id="text_field" type="text" placeholder="Ingresa aquí la descripción del requerimiento..." rows="16"></textarea>
+        <div class="input_container mt-2 mb-2" style="text-align:left">
+            <input id="file-upload" type="file" name="file" multiple />
+        </div>
         
         <button id="data_btn" onclick="DemoApp.sendMessage('', true);">Crear ticket</button>
     </section>
@@ -339,10 +363,10 @@
             Sistema de tickets MESSOR
         </div>
         <div class="hint">
-            Version: <span id="ver"></span>
+            Version: 7.0</span>
         </div>
         <!-- Linea para ver los datos que recibo del telegram solo para desarrollo -->
-        <!-- <pre><code id="webview_data"></code></pre> -->
+        <pre><code id="webview_data"></code></pre>
          <!-- /fin -->
     </section>
 
@@ -396,8 +420,7 @@
                     if (result) {
                         // Cerramos el formulario
                         document.getElementById('text_field').value = '';
-                        DemoApp.close;
-                        DemoApp.showAlert(DemoApp.initDataUnsafe.user.first_name + ', tu número de ticket generado en automático es el: ' + result.ticket + ' con el que puedes hacer seguimiento de tu requerimiento, Gracias.' );
+                        DemoApp.showPopup(DemoApp.initDataUnsafe.user.first_name + ', tu número de ticket generado en automático es el: ' + result.ticket + ' con el que puedes hacer seguimiento de tu requerimiento, Gracias.' );
                     } else {
                         DemoApp.showAlert('Error grave, no ha sido posible comunicarse con el servidor, reenvia el requerimiento');
                     }
@@ -408,8 +431,18 @@
             showAlert(message) {
                 Telegram.WebApp.showAlert(message);
             },
-            showConfirm(message) {
-                Telegram.WebApp.showConfirm(message);
+            showPopup(text) {
+                Telegram.WebApp.showPopup({
+                    title: 'Nuevo Ticket',
+                    message: text,
+                    buttons: [
+                        {id: 'ready', type: 'destructive', text: 'Cerrar'}
+                    ]
+                }, function(buttonId) {
+                    if (buttonId === 'ready') {
+                        DemoApp.close();
+                    }
+                });
             },
 
             // Other
@@ -420,18 +453,26 @@
                 // CHANGE THIS CODE TO YOUR OWN
                 // return onCallback && onCallback({ error: 'This function (' + method + ') should send requests to your backend. Please, change this code to your own.' });
 
+                const body = new FormData()
+                body.append('telegramID', DemoApp.initDataUnsafe.user.id);
+                body.append('poc', DemoApp.initDataUnsafe.user.first_name);
+                body.append('description', document.getElementById('text_field').value);
+                body.append('priority', document.getElementById('priority').checked);
+
+                const files = document.getElementById('file-upload').files;
+                for (var i = 0; i < files.length; i++) {
+                    let file = files[i]
+                    body.append(`files[${i}]`, file);
+                }
+                
                 fetch('https://messor-app-susp3.ondigitalocean.app/api/crear-ticket', {
-                    // mode: 'cors',
                     method: 'POST',
-                    body: JSON.stringify(Object.assign(data, {
-                        telegramID: DemoApp.initDataUnsafe.user.id,
-                        poc: DemoApp.initDataUnsafe.user.first_name,
-                        description: document.getElementById('text_field').value,
-                        priority: document.getElementById('priority').checked
-                    })),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    body: body,
+                    // If you add this, upload won't work
+                    // headers: {
+                    //   'Content-Type': 'multipart/form-data',
+                    // }
+                    
                 }).then(function (response) {
                     return response.json();
                 }).then(function (result) {
@@ -453,7 +494,6 @@
 
         document.getElementById('text_field').focus();
 
-        document.getElementById('ver').innerHTML = Telegram.WebApp.version;
         // document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
 
         if (DemoApp.initDataUnsafe.user) {
