@@ -346,7 +346,7 @@
         <div class="title">Hola <span id="name_user"></span>, si necesitas crear un ticket solo debes indicar la
             solicitud y dar click
             al botón de crear ticket</div>
-        <div class="subtitle">Nota: Si necesitas envíar uno o varios archivos (.doc .xls .pdf o imágenes), dale clic al botón seleccionar archivo </div>
+        <div class="subtitle">Nota: Si necesitas envíar uno o varios archivos (.doc .xls .pdf o imágenes), dale clic al botón seleccionar archivo x1</div>
         <div class="mt-2 mb-2" style="text-align:left">
             <input type="checkbox" id="priority" name="priority">
             <label for="priority">URGENTE</label>
@@ -387,10 +387,6 @@
                 Telegram.WebApp.expand();
                 document.body.style.visibility = '';
                 Telegram.WebApp.ready();
-                // Telegram.WebApp.MainButton.setParams({
-                //     text: 'CERRAR VENTANA',
-                //     is_visible: true
-                // }).onClick(DemoApp.close);
             },
             close() {
                 Telegram.WebApp.close();
