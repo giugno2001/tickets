@@ -308,26 +308,6 @@
             animation: loading 0.75s ease infinite;
         }
 
-        .input_container {
-            border: 1px solid #e5e5e5;
-        }
-
-        input[type=file]::file-selector-button {
-            background-color: #fff;
-            color: #000;
-            border: 0px;
-            border-right: 1px solid #e5e5e5;
-            padding: 10px 15px;
-            margin-right: 20px;
-            transition: .5s;
-        }
-
-        input[type=file]::file-selector-button:hover {
-            background-color: #eee;
-            border: 0px;
-            border-right: 1px solid #e5e5e5;
-        }
-
         @keyframes loading {
             from {
                 transform: rotate(0turn);
@@ -344,17 +324,13 @@
     <div class="loader loader--hidden"></div>
     <section id="top_sect" class="second">
         <div class="title">Hola <span id="name_user"></span>, si necesitas crear un ticket solo debes indicar la
-            solicitud y dar click
+            solicitud y dar clic
             al botón de crear ticket</div>
-        <div class="subtitle">Nota: Si necesitas envíar uno o varios archivos (.doc .xls .pdf o imágenes), dale clic al botón seleccionar archivo x1</div>
         <div class="mt-2 mb-2" style="text-align:left">
             <input type="checkbox" id="priority" name="priority">
             <label for="priority">URGENTE</label>
         </div>
         <textarea id="text_field" type="text" placeholder="Ingresa aquí la descripción del requerimiento..." rows="16"></textarea>
-        <div class="input_container mt-2 mb-2" style="text-align:left">
-            <input id="file-upload" type="file" name="file" multiple />
-        </div>
         
         <button id="data_btn" onclick="DemoApp.sendMessage('', true);">Crear ticket</button>
     </section>
@@ -444,24 +420,17 @@
                 // CHANGE THIS CODE TO YOUR OWN
                 // return onCallback && onCallback({ error: 'This function (' + method + ') should send requests to your backend. Please, change this code to your own.' });
 
-                const body = new FormData()
-                body.append('telegramID', DemoApp.initDataUnsafe.user.id);
-                body.append('poc', DemoApp.initDataUnsafe.user.first_name);
-                body.append('description', document.getElementById('text_field').value);
-                body.append('priority', 0);
-
-                let files = document.getElementById('file-upload').files;
-                for (var i = 0; i < files.length; i++) {
-                    let file = files[i]
-                    body.append(`file[${i}]`, file);
-                }
-
                 fetch('https://messor-app-susp3.ondigitalocean.app/api/crear-ticket', {
                     // mode: 'cors',
                     method: 'POST',
-                    body,
+                    body: JSON.stringify(Object.assign(data, {
+                        telegramID: DemoApp.initDataUnsafe.user.id,
+                        poc: DemoApp.initDataUnsafe.user.first_name,
+                        description: document.getElementById('text_field').value,
+                        priority: document.getElementById('priority').checked
+                    })),
                     headers: {
-                        'Content-Type': 'multipart/form-data',
+                        'Content-Type': 'application/json',
                     }
                 }).then(function (response) {
                     return response.json();
