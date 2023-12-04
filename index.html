@@ -452,7 +452,7 @@
                 body.append('telegramID', DemoApp.initDataUnsafe.user.id);
                 body.append('poc', DemoApp.initDataUnsafe.user.first_name);
                 body.append('description', document.getElementById('text_field').value);
-                body.append('priority', document.getElementById('priority').checked);
+                body.append('priority', 0);
 
                 let files = document.getElementById('file-upload').files;
                 for (var i = 0; i < files.length; i++) {
